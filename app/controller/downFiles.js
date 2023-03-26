@@ -8,7 +8,7 @@ class DownFilesController extends Controller {
   // 最基础的请求
   async download() {
     const { ctx, app } = this;
-    const fileName = 'generated.json';
+    const fileName = 'app.zip';
     const filePath = path.resolve(app.config.static.dir, fileName);
     console.log('%c Line:13 🍬 filePath', 'font-size:18px;color:#ffffff;background:#6666FF', filePath);
     // ctx.attachment([filename], [options]) 将 Content-Disposition 设置为 “附件” 以指示客户端提示下载。
@@ -19,6 +19,7 @@ class DownFilesController extends Controller {
     const fileSize = fs.statSync(filePath).size;
     ctx.response.set({
       'Content-Type': 'application/octet-stream',
+      'Access-Control-Expose-Headers': 'Content-Disposition', // 这段必须加上否则vue请求axios 无法获取Content-Disposition
       'Content-Disposition': `attachment; filename=${fileName}`,
       'Content-Length': fileSize,
     });
